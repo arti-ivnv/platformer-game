@@ -43,15 +43,20 @@ public class GamePanel extends JPanel {
 
         try {
             imgIdle = ImageIO.read(isIdle);
-            isIdle.close();
 
             imgRun = ImageIO.read(isRun);
-            isRun.close();
-
             imgAttack = ImageIO.read(isAttack);
-            isAttack.close();
+
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            try{
+                isIdle.close(); 
+                isRun.close();
+                isAttack.close();
+            } catch (IOException e){
+                e.printStackTrace();
+            }
         }
     }
 
