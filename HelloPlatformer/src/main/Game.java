@@ -3,6 +3,7 @@ package main;
 import java.awt.Graphics;
 
 import entities.Player;
+import levels.LevelManager;
 
 public class Game implements Runnable{
     
@@ -13,6 +14,21 @@ public class Game implements Runnable{
     private final int UPS_SET = 200;
 
     private Player player;
+    private LevelManager levelManager;
+
+    // one tile is 32x32
+    public final static int TILES_DEFAULT_SIZE = 32;
+    // how much should we scale everything (player, enemies, level, etc)
+    // always try to adjast a round number for tiles size
+    public final static float SCALE = 2.0f;
+    // how many tiles in width do we want
+    public final static int TILES_IN_WIDTH = 26;
+    // how many tiles in height do we want
+    public final static int TILES_IN_HEIGHT = 14;
+    public final static int TILE_SIZE = (int)(TILES_DEFAULT_SIZE * SCALE);
+    public final static int GAME_WIDTH = TILE_SIZE * TILES_IN_WIDTH;
+    public final static int GAME_HEIGHT = TILE_SIZE * TILES_IN_HEIGHT;
+
 
     public Game() {
         initClasses();
@@ -28,7 +44,9 @@ public class Game implements Runnable{
 
     // Initializer for starter classes (Player, Enemies, etc)
     private void initClasses() {
-        player = new Player (200, 200);
+        levelManager = new LevelManager(this);
+        player = new Player (200, 200, (int)(32 * SCALE), (int)(32 * SCALE));
+        player.loadLevelData(levelManager.getCurrentLevel().getLevelData());
     }
 
     private void startGameLoop(){
@@ -39,9 +57,11 @@ public class Game implements Runnable{
     //  Update  level, player, enemy, etc
     public void update(){
         player.update();
+        levelManager.update();
     }
 
     public void render(Graphics g){
+        levelManager.draw(g);
         player.render(g);
 
     }

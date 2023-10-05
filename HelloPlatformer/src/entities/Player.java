@@ -2,12 +2,12 @@ package entities;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
 
-import javax.imageio.ImageIO;
+import main.Game;
+import utils.LoadSave;
 
 import static utils.Constants.PlaerConstants.*;
+import static utils.HelpMethods.canMoveHere;
 
 public class Player extends Entity{
 
@@ -20,13 +20,19 @@ public class Player extends Entity{
 
     private boolean up, left, down, right; 
 
-    private float playerSpeed = 2.0f;
+    private float playerSpeed = 1.0f;
     // Moving flag
     private boolean moving = false, attacking = false;
 
-    public Player(float x, float y) {
-        super(x, y);
+    private int[][] lvlData;
+
+    private float xDrawOffset = 10 * Game.SCALE;
+    private float yDrawOffset = 7 * Game.SCALE;
+
+    public Player(float x, float y, int width, int height) {
+        super(x, y, width, height);
         loadAnimations();
+        initHitbox(x, y, 11 * Game.SCALE, 24 * Game.SCALE);
     }
 
     // Player logic states
@@ -40,30 +46,44 @@ public class Player extends Entity{
 
     // Drawing
     public void render(Graphics g){
-        g.drawImage(animations[playerAction][animationIndex], (int)x, (int)y, 128, 128, null);
-        g.drawRect((int)x, (int)y, 128, 128);
+        g.drawImage(animations[playerAction][animationIndex], (int)(hitbox.x - xDrawOffset), (int)(hitbox.y - yDrawOffset), width, height, null);
+        drawHitbox(g);
     }
 
     private void updatePosition(){
 
         moving = false;
+        if(!left && !right && !up && !down){
+            return;
+        }
+
+        float xSpeed = 0, ySpeed = 0;
 
         if (left && !right){
-            x -= playerSpeed;
-            moving = true;
+            xSpeed = -playerSpeed;
         } else if (right && !left){
-            x += playerSpeed;
-            moving = true;
+            xSpeed = playerSpeed;
         }
 
         if (up && !down){
-            y -= playerSpeed;
-            moving = true;
+            ySpeed = -playerSpeed;
         } else if (down && !up){
-            y += playerSpeed;
-            moving = true;
+            ySpeed = playerSpeed;
         }
-    }
+
+    //     if(canMoveHere(x+xSpeed, y+ySpeed, width, height, lvlData)){
+    //         this.x += xSpeed;
+    //         this.y += ySpeed;
+    //         moving = true;
+    //     }
+    // }
+
+        if(canMoveHere(hitbox.x + xSpeed, hitbox.y+ySpeed, hitbox.width, hitbox.height, lvlData)){
+                hitbox.x += xSpeed;
+                hitbox.y += ySpeed;
+                moving = true;
+            }
+        }
 
 
     private void updateAnimationTick() {
@@ -111,41 +131,29 @@ public class Player extends Entity{
     private void loadAnimations() {
         animations = new BufferedImage[3][6];
 
-        InputStream isIdle = getClass().getResourceAsStream("/res/idle.png"); // From 0 - 3
-        InputStream isRun = getClass().getResourceAsStream("/res/run.png"); // From 0 - 5
-        InputStream isAttack = getClass().getResourceAsStream("/res/attack.png"); // From 0 - 3
+        // Helper class to upload animation images
+        BufferedImage [] loader = LoadSave.getPlayerAtlas();
 
-        try {
-            BufferedImage imgIdle = ImageIO.read(isIdle);
-            BufferedImage imgRun = ImageIO.read(isRun);
-            BufferedImage imgAttack = ImageIO.read(isAttack);
 
-            // IDLE 
-            for(int i = 0; i < 4; i++){
-                animations[0][i] = imgIdle.getSubimage(i*32, 0, 32, 32); 
-            }
-
-            // ATTACK
-            for(int i = 0; i < 4; i++){
-                animations[1][i] = imgAttack.getSubimage(i*32, 0, 32, 32); 
-            }
-
-            // RUN
-            for(int i = 0; i < 6; i++){
-                animations[2][i] = imgRun.getSubimage(i*32, 0, 32, 32); 
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try{
-                isIdle.close(); 
-                isRun.close();
-                isAttack.close();
-            } catch (IOException e){
-                e.printStackTrace();
-            }
+        // IDLE 
+        for(int i = 0; i < 4; i++){
+            animations[0][i] = loader[0].getSubimage(i*32, 0, 32, 32); 
         }
+
+        // ATTACK
+        for(int i = 0; i < 4; i++){
+            animations[1][i] = loader[1].getSubimage(i*32, 0, 32, 32); 
+        }
+
+        // RUN
+        for(int i = 0; i < 6; i++){
+            animations[2][i] = loader[2].getSubimage(i*32, 0, 32, 32); 
+        }
+
+    }
+
+    public void loadLevelData(int[][] lvlData){
+        this.lvlData = lvlData;
     }
 
     public void resetDirectionBooleans() {
