@@ -220,6 +220,9 @@ public class Player extends Entity{
 
     public void loadLevelData(int[][] lvlData){
         this.lvlData = lvlData;
+        if(!isEntityOnFloor(hitbox, lvlData)){
+            inAir = true;
+        }
     }
 
     public void resetDirectionBooleans() {
