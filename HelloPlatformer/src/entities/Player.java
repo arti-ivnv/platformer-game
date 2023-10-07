@@ -86,7 +86,7 @@ public class Player extends Entity{
         }
 
         if(inAir){
-            if(canMoveHere(hitbox.y, hitbox.y + airSpeed, hitbox.width, hitbox.height, lvlData)){
+            if(canMoveHere(hitbox.x, hitbox.y + airSpeed, hitbox.width, hitbox.height, lvlData)){
                 hitbox.y += airSpeed;
                 airSpeed += gravity;
                 undateXPos(xSpeed);
@@ -154,6 +154,17 @@ public class Player extends Entity{
             playerAction = IDLE;
         }
 
+        if(inAir){
+            playerAction = JUMP;
+            
+            // NOT WORKING
+            // if (airSpeed < 0){
+            //     playerAction = JUMP;
+            // } else {
+            //     playerAction = FALLING;
+            // }
+        }
+
         if (attacking){
             playerAction = ATTACK;
         }
@@ -171,7 +182,7 @@ public class Player extends Entity{
     // Parse BufferImage and devide it into subimages.
     // Store the subimages in BufferedImage 2-D array.
     private void loadAnimations() {
-        animations = new BufferedImage[3][6];
+        animations = new BufferedImage[5][8];
 
         // Helper class to upload animation images
         BufferedImage [] loader = LoadSave.getPlayerAtlas();
@@ -191,6 +202,19 @@ public class Player extends Entity{
         for(int i = 0; i < 6; i++){
             animations[2][i] = loader[2].getSubimage(i*32, 0, 32, 32); 
         }
+
+        // JUMP
+        for(int i = 0; i < 8; i++){
+            animations[3][i] = loader[3].getSubimage(i*32, 0, 32, 32);
+        }
+
+        // FALLING
+        // for(int i = 4; i < 7; i++){
+        //     animations[4][i] = loader[4].getSubimage(i*32, 0, 32, 32);
+        // }
+
+
+
 
     }
 
