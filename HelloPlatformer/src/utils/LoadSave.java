@@ -13,6 +13,8 @@ public class LoadSave {
 
     public static final String LEVEL_TEXTURES = "res/lvl_sprites/oak_woods_tileset.png";
     public static final String LEVEL_1_OUTLINE = "res/lvl_sprites/pixil-frame-0.png";
+    public static final String MENU_BUTTONS = "res/ui_sprites/button_atlas.png";
+    
     
     public static BufferedImage[] getPlayerAtlas(){
 
