@@ -73,11 +73,6 @@ public class HelpMethods {
             // Falling - Touching Floor
             int tileYPosition = currentTile * Game.TILE_SIZE;
             int yOffset = (int)(Game.TILE_SIZE - hitbox.height);
-            System.out.println("hitbox.height: " + hitbox.height);
-            System.out.println("currentTile: " + currentTile);
-            System.out.println("tileYPosition: " + tileYPosition);
-            System.out.println("yOffset: " + yOffset);
-            System.out.println("position y: " + (tileYPosition + yOffset - 1));
             return tileYPosition + yOffset - 1;
         } else {
             // Jumping

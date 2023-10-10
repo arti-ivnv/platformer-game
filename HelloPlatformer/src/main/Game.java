@@ -2,8 +2,9 @@ package main;
 
 import java.awt.Graphics;
 
-import entities.Player;
-import levels.LevelManager;
+import gamestates.Gamestate;
+import gamestates.Menu;
+import gamestates.Playing;
 
 public class Game implements Runnable{
     
@@ -13,8 +14,9 @@ public class Game implements Runnable{
     private final int FPS_SET = 120;
     private final int UPS_SET = 200;
 
-    private Player player;
-    private LevelManager levelManager;
+    private Playing playing;
+    private Menu menu;
+
 
     // one tile is 32x32
     public final static int TILES_DEFAULT_SIZE = 32;
@@ -44,9 +46,8 @@ public class Game implements Runnable{
 
     // Initializer for starter classes (Player, Enemies, etc)
     private void initClasses() {
-        levelManager = new LevelManager(this);
-        player = new Player (200, 200, (int)(32 * SCALE), (int)(32 * SCALE));
-        player.loadLevelData(levelManager.getCurrentLevel().getLevelData());
+        menu = new Menu(this);
+        playing = new Playing(this);
     }
 
     private void startGameLoop(){
@@ -56,13 +57,31 @@ public class Game implements Runnable{
 
     //  Update  level, player, enemy, etc
     public void update(){
-        player.update();
-        levelManager.update();
+
+        switch (Gamestate.state){
+            case MENU:
+                menu.update();
+                break;
+            case PLAYING:
+                playing.update();
+                break;
+            default:
+                break;
+        }
     }
 
     public void render(Graphics g){
-        levelManager.draw(g);
-        player.render(g);
+
+        switch (Gamestate.state){
+            case MENU:
+                menu.draw(g);
+                break;
+            case PLAYING:
+                playing.draw(g);
+                break;
+            default:
+                break;
+        }
 
     }
 
@@ -127,11 +146,19 @@ public class Game implements Runnable{
     }
 
 
-    public Player getPlayer(){
-        return player;
+    public void windowFocusLost() {
+        if(Gamestate.state == Gamestate.PLAYING){
+            playing.getPlayer().resetDirectionBooleans();
+        }
     }
 
-    public void windowFocusLost() {
-        player.resetDirectionBooleans();
+
+    public Menu getMenu(){
+        return menu;
+    }
+    
+
+    public Playing getPlaying(){
+        return playing;
     }
 }
