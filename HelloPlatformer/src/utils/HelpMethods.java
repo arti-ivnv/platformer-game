@@ -36,11 +36,7 @@ public class HelpMethods {
         int value  = lvlData[(int)yIndex][(int)xIndex];
 
         if (value >= 280 || value < 0 || value != 4){
-
-            System.out.println("isSolid value: " + value);
-
             return true;
-
         }
 
         return false;
@@ -66,8 +62,6 @@ public class HelpMethods {
 
     public static float getEntityYPositionUnderRoofOrAboveFloor(Rectangle2D.Float hitbox, float airSpeed){
         int currentTile = (int)(hitbox.y / Game.TILE_SIZE);
-
-        System.out.println("hitbox.y: " + hitbox.y);
 
         if(airSpeed > 0){
             // Falling - Touching Floor

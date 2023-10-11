@@ -20,7 +20,7 @@ public class Player extends Entity{
 
     private boolean up, left, down, right, jump; 
 
-    private float playerSpeed = 1.0f;
+    private float playerSpeed = 1.0f *  Game.SCALE;
     // Moving flag
     private boolean moving = false, attacking = false;
 
@@ -41,7 +41,7 @@ public class Player extends Entity{
     public Player(float x, float y, int width, int height) {
         super(x, y, width, height);
         loadAnimations();
-        initHitbox(x, y, 11 * Game.SCALE,  24 * Game.SCALE);
+        initHitbox(x, y, (int) (11 * Game.SCALE), (int) (24 * Game.SCALE));
     }
 
     // Player logic states

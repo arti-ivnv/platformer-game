@@ -22,7 +22,7 @@ public class Game implements Runnable{
     public final static int TILES_DEFAULT_SIZE = 32;
     // how much should we scale everything (player, enemies, level, etc)
     // always try to adjast a round number for tiles size
-    public final static float SCALE = 2.0f;
+    public final static float SCALE = 1.5f;
     // how many tiles in width do we want
     public final static int TILES_IN_WIDTH = 26;
     // how many tiles in height do we want
@@ -65,7 +65,10 @@ public class Game implements Runnable{
             case PLAYING:
                 playing.update();
                 break;
+            case OPTIONS:
+            case QUIT:
             default:
+                System.exit(0);
                 break;
         }
     }
