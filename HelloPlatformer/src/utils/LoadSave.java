@@ -12,13 +12,15 @@ import main.Game;
 public class LoadSave {
 
     public static final String LEVEL_TEXTURES = "res/lvl_sprites/oak_woods_tileset.png";
-    public static final String LEVEL_1_OUTLINE = "res/lvl_sprites/pixil-frame-0.png";
+    // public static final String LEVEL_1_OUTLINE = "res/lvl_sprites/pixil-frame-0.png";
+    public static final String LEVEL_1_OUTLINE = "res/lvl_sprites/pixil-frame-2.png";
     public static final String MENU_BUTTONS = "res/ui_sprites/button_atlas.png";
     public static final String MENU_BACKGROUND = "res/ui_sprites/menu_background.png";
     public static final String PAUSE_BACKGROUND = "res/ui_sprites/pause_menu.png";
     public static final String SOUND_BUTTONS = "res/ui_sprites/sound_button.png";
     public static final String URM_BUTTONS = "res/ui_sprites/urm_buttons.png";
     public static final String VOLUME_BUTTONS = "res/ui_sprites/volume_buttons.png";
+    public static final String MENU_BACKGROUND_IMG = "res/lvl_sprites/background_menu.png";
     
     public static BufferedImage[] getPlayerAtlas(){
 
@@ -77,8 +79,9 @@ public class LoadSave {
     // So, we keep red color for our textures.
     // We parse an outline image and store red values.
     public static int[][] getLevelData(){
-        int[][] lvlData = new int[Game.TILES_IN_HEIGHT][Game.TILES_IN_WIDTH];
+
         BufferedImage img = getLevelAtlas(LEVEL_1_OUTLINE);
+        int[][] lvlData = new int[img.getHeight()][img.getWidth()];
 
         for(int j = 0; j < img.getHeight(); j++){
             for (int i = 0; i < img.getWidth(); i++){

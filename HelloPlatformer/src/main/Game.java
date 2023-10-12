@@ -24,9 +24,9 @@ public class Game implements Runnable{
     // always try to adjast a round number for tiles size
     public final static float SCALE = 2.0f;
     // how many tiles in width do we want
-    public final static int TILES_IN_WIDTH = 26;
+    public final static int TILES_IN_WIDTH = 26; // visible
     // how many tiles in height do we want
-    public final static int TILES_IN_HEIGHT = 14;
+    public final static int TILES_IN_HEIGHT = 14; // visible
     public final static int TILE_SIZE = (int)(TILES_DEFAULT_SIZE * SCALE);
     public final static int GAME_WIDTH = TILE_SIZE * TILES_IN_WIDTH;
     public final static int GAME_HEIGHT = TILE_SIZE * TILES_IN_HEIGHT;

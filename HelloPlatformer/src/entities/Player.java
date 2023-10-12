@@ -30,11 +30,10 @@ public class Player extends Entity{
     private float yDrawOffset = 7 * Game.SCALE;
 
     // Jumping and Gravity
-
     private float airSpeed = 0f;
-    private float gravity = 0.1f * Game.SCALE;
+    private float gravity = 0.08f * Game.SCALE;
     // Negative because we are going y axis direction up;
-    private float jumpSpeed = -4.25f * Game.SCALE;
+    private float jumpSpeed = -3.45f * Game.SCALE;
     private float fallSpeedAfterColision = 0.5f * Game.SCALE;
     private boolean inAir = false;
 
@@ -54,9 +53,9 @@ public class Player extends Entity{
     }
 
     // Drawing
-    public void render(Graphics g){
-        g.drawImage(animations[playerAction][animationIndex], (int)(hitbox.x - xDrawOffset), (int)(hitbox.y - yDrawOffset), width, height, null);
-        drawHitbox(g);
+    public void render(Graphics g, int lvlOffset){
+        g.drawImage(animations[playerAction][animationIndex], (int)(hitbox.x - xDrawOffset) - lvlOffset, (int)(hitbox.y - yDrawOffset), width, height, null);
+        // drawHitbox(g);
     }
 
     private void updatePosition(){
@@ -66,8 +65,14 @@ public class Player extends Entity{
         if (jump)
             jump();
 
-        if(!left && !right && !inAir){
-            return;
+        // if(!left && !right && !inAir){
+        //     return;
+        // }
+        
+        if(!inAir){
+            if((!left && !right) || (right && left)){
+                return;
+            }
         }
 
         float xSpeed = 0;
