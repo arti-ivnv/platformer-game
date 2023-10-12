@@ -21,7 +21,10 @@ public class LoadSave {
     public static final String URM_BUTTONS = "res/ui_sprites/urm_buttons.png";
     public static final String VOLUME_BUTTONS = "res/ui_sprites/volume_buttons.png";
     public static final String MENU_BACKGROUND_IMG = "res/lvl_sprites/background_menu.png";
-    
+    public static final String PLAYING_BG_IMG = "res/lvl_sprites/playing_bg_img.png";
+    public static final String BIG_CLOUDS = "res/lvl_sprites/big_clouds.png";
+    public static final String SMALL_CLOUDS = "res/lvl_sprites/small_clouds.png";
+
     public static BufferedImage[] getPlayerAtlas(){
 
         BufferedImage[] playerAnimation = new BufferedImage[5];
