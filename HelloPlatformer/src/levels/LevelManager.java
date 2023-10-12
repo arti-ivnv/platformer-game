@@ -44,8 +44,6 @@ public class LevelManager {
             }
         }
 
-        // g.drawImage(levelSprite[4], 0, 0, null);
-        // g.drawRect(0, 0, 32, 32);
     }
 
     public void update(){

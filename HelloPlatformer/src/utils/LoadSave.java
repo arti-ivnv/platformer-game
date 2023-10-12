@@ -18,7 +18,7 @@ public class LoadSave {
     public static final String PAUSE_BACKGROUND = "res/ui_sprites/pause_menu.png";
     public static final String SOUND_BUTTONS = "res/ui_sprites/sound_button.png";
     public static final String URM_BUTTONS = "res/ui_sprites/urm_buttons.png";
-    
+    public static final String VOLUME_BUTTONS = "res/ui_sprites/volume_buttons.png";
     
     public static BufferedImage[] getPlayerAtlas(){
 
