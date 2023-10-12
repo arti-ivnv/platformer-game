@@ -7,11 +7,16 @@ import java.awt.event.MouseEvent;
 import entities.Player;
 import levels.LevelManager;
 import main.Game;
+import ui.PauseOverlay;
 
 public class Playing extends State implements Statemethods{
 
     private Player player;
     private LevelManager levelManager;
+    private PauseOverlay pauseOverlay;
+
+    // Decides either the  game is paused or not.
+    private boolean paused = true;
     
     public Playing(Game game) {
         super(game);
@@ -24,6 +29,7 @@ public class Playing extends State implements Statemethods{
         levelManager = new LevelManager(game);
         player = new Player (200, 200, (int)(32 * Game.SCALE), (int)(32 * Game.SCALE));
         player.loadLevelData(levelManager.getCurrentLevel().getLevelData());
+        pauseOverlay = new PauseOverlay();
     }
 
 
@@ -31,6 +37,8 @@ public class Playing extends State implements Statemethods{
     public void update() {
         levelManager.update();
         player.update();
+        
+        pauseOverlay.update();
     }
 
 
@@ -38,6 +46,8 @@ public class Playing extends State implements Statemethods{
     public void draw(Graphics g) {
         levelManager.draw(g);
         player.render(g);
+
+        pauseOverlay.draw(g);
 
     }
 
@@ -52,17 +62,25 @@ public class Playing extends State implements Statemethods{
 
     @Override
     public void mousePressed(MouseEvent e) {
+        if(paused){
+            pauseOverlay.mousePressed(e);
+        }
     }
 
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        if(paused){
+            pauseOverlay.mouseReleased(e);
+        }
     }
 
 
     @Override
     public void mouseMoved(MouseEvent e) {
-
+        if(paused){
+            pauseOverlay.mouseMoved(e);
+        }
     }
 
 
