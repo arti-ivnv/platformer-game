@@ -62,6 +62,9 @@ public class Player extends Entity{
     // Attack hitbox
     private Rectangle2D.Float attackBox;
 
+    private int flipX = 0;
+    private int flipW = 1;
+
     public Player(float x, float y, int width, int height) {
         super(x, y, width, height);
         loadAnimations();
@@ -82,13 +85,14 @@ public class Player extends Entity{
         updatePosition();
         updateAnimationTick();
         setAnimation();
+
     }
 
     private void updateAttackBox() {
         if(right){
             attackBox.x = hitbox.x + hitbox.width + (int)(Game.SCALE * 10) - 30;
         }else if(left){
-            attackBox.x = hitbox.x - hitbox.width - (int)(Game.SCALE * 10) - 30;
+            attackBox.x = hitbox.x - hitbox.width - (int)(Game.SCALE * 10) + 15;
         }
         attackBox.y = hitbox.y + (int)(Game.SCALE * 10) - 10;
     }
@@ -99,7 +103,10 @@ public class Player extends Entity{
 
     // Drawing
     public void render(Graphics g, int lvlOffset){
-        g.drawImage(animations[playerAction][animationIndex], (int)(hitbox.x - xDrawOffset) - lvlOffset, (int)(hitbox.y - yDrawOffset), width, height, null);
+        g.drawImage(animations[playerAction][animationIndex], 
+                        (int)(hitbox.x - xDrawOffset) - lvlOffset + flipX, 
+                        (int)(hitbox.y - yDrawOffset), 
+                        width * flipW, height, null);
         // drawHitbox(g, lvlOffset);
         drawAttackBox(g, lvlOffset);
         drawUI(g);
@@ -138,9 +145,13 @@ public class Player extends Entity{
 
         if (left){
             xSpeed -= playerSpeed;
+            flipX = width;
+            flipW = -1;
         } 
         if (right){
             xSpeed += playerSpeed;
+            flipX = 0;
+            flipW = 1;
         }
 
         if(!inAir){
@@ -257,7 +268,7 @@ public class Player extends Entity{
     // Parse BufferImage and devide it into subimages.
     // Store the subimages in BufferedImage 2-D array.
     private void loadAnimations() {
-        animations = new BufferedImage[5][8];
+        animations = new BufferedImage[7][8];
 
         // Helper class to upload animation images
         BufferedImage [] loader = LoadSave.getPlayerAtlas();
@@ -287,6 +298,16 @@ public class Player extends Entity{
         // for(int i = 4; i < 7; i++){
         //     animations[4][i] = loader[4].getSubimage(i*32, 0, 32, 32);
         // }
+
+        // HURT
+        for(int i = 0; i < 4; i++){
+            animations[5][i] = loader[5].getSubimage(i * 32, 0, 32, 32);
+        }
+
+        // HURT
+        for(int i = 0; i < 8; i++){
+            animations[6][i] = loader[6].getSubimage(i * 32, 0, 32, 32);
+        }
 
         statusBarImage = LoadSave.getLevelAtlas(LoadSave.STATUS_BAR);
 

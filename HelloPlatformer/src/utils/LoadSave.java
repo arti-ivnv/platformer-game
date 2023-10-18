@@ -34,13 +34,16 @@ public class LoadSave {
 
     public static BufferedImage[] getPlayerAtlas(){
 
-        BufferedImage[] playerAnimation = new BufferedImage[5];
+        BufferedImage[] playerAnimation = new BufferedImage[7];
 
         InputStream isIdle = LoadSave.class.getResourceAsStream("/res/player_sprites/idle.png"); // From 0 - 3
         InputStream isRun = LoadSave.class.getResourceAsStream("/res/player_sprites/run.png"); // From 0 - 5
         InputStream isAttack = LoadSave.class.getResourceAsStream("/res/player_sprites/attack.png"); // From 0 - 3
         InputStream isJumpingOrFalling = LoadSave.class.getResourceAsStream("/res/player_sprites/jump.png"); // From 0 - 7
         InputStream isJumpingOrFalling2 = LoadSave.class.getResourceAsStream("/res/player_sprites/jump.png"); // From 0 - 3
+        InputStream isHurt = LoadSave.class.getResourceAsStream("/res/player_sprites/hurt.png"); // From 0 - 3
+        InputStream isDeath = LoadSave.class.getResourceAsStream("/res/player_sprites/death.png"); // From 0 - 7
+
         try {
 
             playerAnimation[0] = ImageIO.read(isIdle);
@@ -48,6 +51,8 @@ public class LoadSave {
             playerAnimation[2] = ImageIO.read(isRun);
             playerAnimation[3] = ImageIO.read(isJumpingOrFalling);
             playerAnimation[4] = ImageIO.read(isJumpingOrFalling2);
+            playerAnimation[5] = ImageIO.read(isHurt);
+            playerAnimation[6] = ImageIO.read(isDeath);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -58,6 +63,8 @@ public class LoadSave {
                 isAttack.close();
                 isJumpingOrFalling.close();
                 isJumpingOrFalling2.close();
+                isHurt.close();
+                isDeath.close();
             } catch (IOException e){
                 e.printStackTrace();
             }
