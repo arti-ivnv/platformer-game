@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
+import gamestates.Playing;
 import main.Game;
 import utils.LoadSave;
 
@@ -65,8 +66,13 @@ public class Player extends Entity{
     private int flipX = 0;
     private int flipW = 1;
 
-    public Player(float x, float y, int width, int height) {
+    private boolean attackChecked;
+
+    private Playing playing;
+
+    public Player(float x, float y, int width, int height, Playing playing) {
         super(x, y, width, height);
+        this.playing = playing;
         loadAnimations();
         initHitbox(x, y, (int) (11 * Game.SCALE), (int) (24 * Game.SCALE));
         initAttackBox();
@@ -80,12 +86,29 @@ public class Player extends Entity{
     public void update(){
 
         updateHealthBar();
+
+        if(currentHealth <= 0){
+            playing.setGameOver(true);
+            return;
+        }
+
         updateAttackBox();
 
         updatePosition();
+        if(attacking){
+            checkAttack();
+        }
         updateAnimationTick();
         setAnimation();
 
+    }
+
+    private void checkAttack() {
+        if(attackChecked || animationIndex != 1){
+            return;
+        }
+        attackChecked = true;
+        playing.checkEnemyHit(attackBox);
     }
 
     private void updateAttackBox() {
@@ -108,7 +131,7 @@ public class Player extends Entity{
                         (int)(hitbox.y - yDrawOffset), 
                         width * flipW, height, null);
         // drawHitbox(g, lvlOffset);
-        drawAttackBox(g, lvlOffset);
+        // drawAttackBox(g, lvlOffset);
         drawUI(g);
     }
 
@@ -226,6 +249,7 @@ public class Player extends Entity{
             if (animationIndex >= getSpriteAmount(playerAction)){
                 animationIndex = 0;
                 attacking = false;
+                attackChecked = false;
             }
         }
     }
@@ -253,6 +277,11 @@ public class Player extends Entity{
 
         if (attacking){
             playerAction = ATTACK;
+            if(startAnimation != ATTACK){
+                animationIndex = 1;
+                animationTick = 0;
+                return;
+            }
         }
 
         if(startAnimation != playerAction){
@@ -369,6 +398,23 @@ public class Player extends Entity{
 
     public void setJump(boolean jump){
         this.jump = jump;
+    }
+
+    public void resetAll() {
+        resetDirectionBooleans();
+        inAir = false;
+        attacking = false;
+        moving = false;
+        playerAction = IDLE;
+        currentHealth = maxHealth;
+
+        hitbox.x = x;
+        hitbox.y = y;
+
+        if(!isEntityOnFloor(hitbox, lvlData)){
+            inAir = true;
+        }
+
     }
     
 }
