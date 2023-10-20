@@ -30,6 +30,7 @@ public class LoadSave {
     public static final String SMALL_CLOUDS = "res/lvl_sprites/small_clouds.png";
     public static final String CRABY_SPRITE = "res/crabby_sprite.png";
     public static final String STATUS_BAR = "res/player_sprites/health_power_bar.png";
+    public static final String COMPLETED_IMG = "res/ui_sprites/completed_sprite.png";
 
 
     public static BufferedImage[] getPlayerAtlas(){
