@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import gamestates.Gamestate;
 import gamestates.Menu;
 import gamestates.Playing;
+import utils.LoadSave;
 
 public class Game implements Runnable{
     
@@ -33,6 +34,8 @@ public class Game implements Runnable{
 
 
     public Game() {
+
+        LoadSave.getAllLevels();
         initClasses();
 
         gamePanel = new GamePanel(this);
