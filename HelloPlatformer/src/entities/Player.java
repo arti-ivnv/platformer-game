@@ -12,19 +12,16 @@ import utils.LoadSave;
 
 import static utils.Constants.PlaerConstants.*;
 import static utils.HelpMethods.*;
+import static utils.Constants.GRAVITY;
+import static utils.Constants.ANI_SPEED;
 
 public class Player extends Entity{
 
     private BufferedImage[][] animations;
-    // Lower the animationSpeed value -> faster animation (120 / 4 = 30)
-    private int animationTick, animationIndex, animationSpeed = 20;
 
-    // Field for action animations (IDLE by default)
-    private int playerAction = IDLE;
 
-    private boolean up, left, down, right, jump; 
+    private boolean left, right, jump; 
 
-    private float playerSpeed = 1.0f *  Game.SCALE;
     // Moving flag
     private boolean moving = false, attacking = false;
 
@@ -34,12 +31,10 @@ public class Player extends Entity{
     private float yDrawOffset = 7 * Game.SCALE;
 
     // Jumping and Gravity
-    private float airSpeed = 0f;
-    private float gravity = 0.08f * Game.SCALE;
+
     // Negative because we are going y axis direction up;
-    private float jumpSpeed = -3.45f * Game.SCALE;
+    private float jumpSpeed = -2.40f * Game.SCALE;
     private float fallSpeedAfterColision = 0.5f * Game.SCALE;
-    private boolean inAir = false;
 
     // Status Bar UI
 
@@ -57,12 +52,9 @@ public class Player extends Entity{
     private int healthBarX = (int) (34 * Game.SCALE);
     private int healthBarY = (int) (14 * Game.SCALE);
 
-    private int maxHealth = 100; 
-    private int currentHealth = maxHealth;
+
     private int healthWidth = healthBarWidth;
 
-    // Attack hitbox
-    private Rectangle2D.Float attackBox;
 
     private int flipX = 0;
     private int flipW = 1;
@@ -74,8 +66,12 @@ public class Player extends Entity{
     public Player(float x, float y, int width, int height, Playing playing) {
         super(x, y, width, height);
         this.playing = playing;
+        this.state = IDLE;
+        this.maxHealth = 100;
+        this.currentHealth = maxHealth;
+        this.walkSpeed = Game.SCALE * 1.0f;
         loadAnimations();
-        initHitbox(x, y, (int) (11 * Game.SCALE), (int) (24 * Game.SCALE));
+        initHitbox(11, 24);
         initAttackBox();
     }
 
@@ -134,7 +130,7 @@ public class Player extends Entity{
 
     // Drawing
     public void render(Graphics g, int lvlOffset){
-        g.drawImage(animations[playerAction][animationIndex], 
+        g.drawImage(animations[state][animationIndex], 
                         (int)(hitbox.x - xDrawOffset) - lvlOffset + flipX, 
                         (int)(hitbox.y - yDrawOffset), 
                         width * flipW, height, null);
@@ -143,10 +139,6 @@ public class Player extends Entity{
         drawUI(g);
     }
 
-    private void drawAttackBox(Graphics g, int lvlOffsetX) {
-        g.setColor(Color.RED);
-        g.drawRect((int)attackBox.x - lvlOffsetX, (int)attackBox.y, (int)attackBox.width, (int)attackBox.height);
-    }
 
     private void drawUI(Graphics g) {
         g.drawImage(statusBarImage, statusBarX, statusBarY, statusBarWidth, statusBarHeight, null);
@@ -175,12 +167,12 @@ public class Player extends Entity{
         float xSpeed = 0;
 
         if (left){
-            xSpeed -= playerSpeed;
+            xSpeed -= walkSpeed;
             flipX = width;
             flipW = -1;
         } 
         if (right){
-            xSpeed += playerSpeed;
+            xSpeed += walkSpeed;
             flipX = 0;
             flipW = 1;
         }
@@ -194,7 +186,7 @@ public class Player extends Entity{
         if(inAir){
             if(canMoveHere(hitbox.x, hitbox.y + airSpeed, hitbox.width, hitbox.height, lvlData)){
                 hitbox.y += airSpeed;
-                airSpeed += gravity;
+                airSpeed += GRAVITY;
                 undateXPos(xSpeed);
             } else {
                 hitbox.y = getEntityYPositionUnderRoofOrAboveFloor(hitbox, airSpeed);
@@ -249,12 +241,12 @@ public class Player extends Entity{
        
         animationTick++;
 
-        if (animationTick >= animationSpeed){
+        if (animationTick >= ANI_SPEED){
 
             animationTick = 0;
             animationIndex++;
 
-            if (animationIndex >= getSpriteAmount(playerAction)){
+            if (animationIndex >= getSpriteAmount(state)){
                 animationIndex = 0;
                 attacking = false;
                 attackChecked = false;
@@ -264,16 +256,16 @@ public class Player extends Entity{
 
     private void setAnimation() {
 
-        int startAnimation = playerAction;
+        int startAnimation = state;
 
         if(moving){
-           playerAction = RUNNING;
+           state = RUNNING;
         } else {
-            playerAction = IDLE;
+            state = IDLE;
         }
 
         if(inAir){
-            playerAction = JUMP;
+            state = JUMP;
             
             // NOT WORKING
             // if (airSpeed < 0){
@@ -284,7 +276,7 @@ public class Player extends Entity{
         }
 
         if (attacking){
-            playerAction = ATTACK;
+            state = ATTACK;
             if(startAnimation != ATTACK){
                 animationIndex = 1;
                 animationTick = 0;
@@ -292,7 +284,7 @@ public class Player extends Entity{
             }
         }
 
-        if(startAnimation != playerAction){
+        if(startAnimation != state){
             resetAnimationTick();
         }
     }
@@ -362,22 +354,12 @@ public class Player extends Entity{
     }
 
     public void resetDirectionBooleans() {
-            up = false;
             left = false;
             right = false;
-            down = false;
     }
 
     public void setAttacking(boolean attacking){
         this.attacking = attacking;
-    }
-
-    public boolean isUp() {
-        return up;
-    }
-
-    public void setUp(boolean up) {
-        this.up = up;
     }
 
     public boolean isLeft() {
@@ -388,13 +370,6 @@ public class Player extends Entity{
         this.left = left;
     }
 
-    public boolean isDown() {
-        return down;
-    }
-
-    public void setDown(boolean down) {
-        this.down = down;
-    }
 
     public boolean isRight() {
         return right;
@@ -413,7 +388,7 @@ public class Player extends Entity{
         inAir = false;
         attacking = false;
         moving = false;
-        playerAction = IDLE;
+        state = IDLE;
         currentHealth = maxHealth;
 
         hitbox.x = x;
