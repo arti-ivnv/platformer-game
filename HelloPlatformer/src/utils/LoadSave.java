@@ -96,23 +96,6 @@ public class LoadSave {
         return lvl;
     }
 
-    public static ArrayList<Crabby> getCrabs(){
-        BufferedImage img = getLevelAtlas(LEVEL_1_OUTLINE);
-        ArrayList<Crabby> list = new ArrayList<>();
-
-        for(int j = 0; j < img.getHeight(); j++){
-            for (int i = 0; i < img.getWidth(); i++){
-                Color color = new Color(img.getRGB(i, j));
-                int value = color.getGreen();
-                if (value == CRABBY){
-                    list.add(new Crabby(i * Game.TILE_SIZE, j * Game.TILE_SIZE));
-                }
-            }
-        }
-
-        return list;
-
-    }
 
     // URL - location to the resource
     // URI - 
@@ -153,26 +136,6 @@ public class LoadSave {
         return imgs;
     }
 
-    // So, we keep red color for our textures.
-    // We parse an outline image and store red values.
-    public static int[][] getLevelData(){
-
-        BufferedImage img = getLevelAtlas(LEVEL_1_OUTLINE);
-        int[][] lvlData = new int[img.getHeight()][img.getWidth()];
-
-        for(int j = 0; j < img.getHeight(); j++){
-            for (int i = 0; i < img.getWidth(); i++){
-                Color color = new Color(img.getRGB(i, j));
-                int value = color.getRed();
-                if (value >= 280){
-                    value = 0;
-                }
-                lvlData[j][i] = value;
-            }
-        }
-
-        return lvlData;
-    }
 
 
 }

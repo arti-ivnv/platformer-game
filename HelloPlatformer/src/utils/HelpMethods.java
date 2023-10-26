@@ -1,8 +1,16 @@
 package utils;
 
+import java.awt.Color;
+import java.awt.Point;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.nio.Buffer;
+import java.util.ArrayList;
 
+import entities.Crabby;
 import main.Game;
+
+import static utils.Constants.EnemyConstants.CRABBY;
 
 public class HelpMethods {
     
@@ -118,5 +126,57 @@ public class HelpMethods {
         } else {
             return isAllTilesWalkable(firstXTile, secondXTile, yTile, lvlData);
         }
+    }
+
+        // So, we keep red color for our textures.
+    // We parse an outline image and store red values.
+    public static int[][] getLevelDataHelper(BufferedImage img){
+
+        int[][] lvlData = new int[img.getHeight()][img.getWidth()];
+
+        for(int j = 0; j < img.getHeight(); j++){
+            for (int i = 0; i < img.getWidth(); i++){
+                Color color = new Color(img.getRGB(i, j));
+                int value = color.getRed();
+                if (value >= 220){
+                    value = 4;
+                }
+                lvlData[j][i] = value;
+            }
+        }
+
+        return lvlData;
+    }
+
+    public static ArrayList<Crabby> getCrabsHelper(BufferedImage img){
+    
+        ArrayList<Crabby> list = new ArrayList<>();
+
+        for(int j = 0; j < img.getHeight(); j++){
+            for (int i = 0; i < img.getWidth(); i++){
+                Color color = new Color(img.getRGB(i, j));
+                int value = color.getGreen();
+                if (value == CRABBY){
+                    list.add(new Crabby(i * Game.TILE_SIZE, j * Game.TILE_SIZE));
+                }
+            }
+        }
+
+        return list;
+
+    }
+
+    public static Point getPlayerSpawnHelper(BufferedImage img){
+        for(int j = 0; j < img.getHeight(); j++){
+            for (int i = 0; i < img.getWidth(); i++){
+                Color color = new Color(img.getRGB(i, j));
+                int value = color.getGreen();
+                if (value == 100){
+                    return new Point(i * Game.TILE_SIZE, j * Game.TILE_SIZE);
+                }
+            }
+        }
+
+        return new Point(1 * Game.TILE_SIZE, 1 * Game.TILE_SIZE);
     }
 }

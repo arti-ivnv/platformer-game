@@ -35,7 +35,6 @@ public class Game implements Runnable{
 
     public Game() {
 
-        LoadSave.getAllLevels();
         initClasses();
 
         gamePanel = new GamePanel(this);
