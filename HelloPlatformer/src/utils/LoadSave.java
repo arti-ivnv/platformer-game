@@ -34,6 +34,9 @@ public class LoadSave {
     public static final String STATUS_BAR = "res/player_sprites/health_power_bar.png";
     public static final String COMPLETED_IMG = "res/ui_sprites/completed_sprite.png";
 
+    public static final String POTION_ATLAS = "res/potions_sprites.png";
+    public static final String CONTAINER_ATLAS = "res/objects_sprites.png";
+
 
     public static BufferedImage[] getPlayerAtlas(){
 
