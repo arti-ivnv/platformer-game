@@ -6,6 +6,10 @@ import java.util.ArrayList;
 
 import entities.Crabby;
 import main.Game;
+import objects.GameContainer;
+import objects.Potion;
+import utils.HelpMethods;
+
 import static utils.HelpMethods.getLevelDataHelper;
 import static utils.HelpMethods.getCrabsHelper;
 import static utils.HelpMethods.getPlayerSpawnHelper;
@@ -15,6 +19,8 @@ public class Level {
 
     private BufferedImage img;
     private ArrayList<Crabby> crabs;
+    private ArrayList<Potion> potions;
+    private ArrayList<GameContainer> containers;
     private int[][] lvlData;
 
     private int lvlTilesWide;
@@ -27,8 +33,18 @@ public class Level {
         this.img = img;
         createLevelData();
         createEnemies();
+        createPotions();
+        createContainers();
         calcLevelOffsets();
         calcPlayerSpawn();
+    }
+
+    private void createContainers() {
+        containers = HelpMethods.getContainersHelper(img);
+    }
+
+    private void createPotions() {
+        potions = HelpMethods.getPotionsHelper(img);
     }
 
     private void calcPlayerSpawn() {
@@ -68,6 +84,14 @@ public class Level {
 
     public Point getPlayerSpawn(){
         return playerSpawn;
+    }
+
+    public ArrayList<Potion> getPotions(){
+        return potions;
+    }
+
+    public ArrayList<GameContainer> getContainers(){
+        return containers;
     }
 
 
