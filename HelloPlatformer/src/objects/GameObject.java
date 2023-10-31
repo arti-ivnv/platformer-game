@@ -95,6 +95,10 @@ public class GameObject {
         return animationIndex;
     }
 
+    public void setAnimation(boolean doAnimation){
+        this.doAnimation = doAnimation;
+    }
+
 
     
 

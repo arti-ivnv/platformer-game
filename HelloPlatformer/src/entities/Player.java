@@ -99,6 +99,9 @@ public class Player extends Entity{
         updateAttackBox();
 
         updatePosition();
+        if(moving){
+            checkPotionTouched();
+        }
         if(attacking){
             checkAttack();
         }
@@ -107,12 +110,17 @@ public class Player extends Entity{
 
     }
 
+    private void checkPotionTouched() {
+        playing.checkPotionTouched(hitbox);
+    }
+
     private void checkAttack() {
         if(attackChecked || animationIndex != 1){
             return;
         }
         attackChecked = true;
         playing.checkEnemyHit(attackBox);
+        playing.checkObejectHit(attackBox);
     }
 
     private void updateAttackBox() {
@@ -398,6 +406,10 @@ public class Player extends Entity{
             inAir = true;
         }
 
+    }
+
+    public void changePower(int value) {
+        System.out.println("Added Power!");
     }
     
 }
