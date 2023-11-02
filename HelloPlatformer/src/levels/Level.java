@@ -8,6 +8,7 @@ import entities.Crabby;
 import main.Game;
 import objects.GameContainer;
 import objects.Potion;
+import objects.Spike;
 import utils.HelpMethods;
 
 import static utils.HelpMethods.getLevelDataHelper;
@@ -20,6 +21,7 @@ public class Level {
     private BufferedImage img;
     private ArrayList<Crabby> crabs;
     private ArrayList<Potion> potions;
+    private ArrayList<Spike> spikes;
     private ArrayList<GameContainer> containers;
     private int[][] lvlData;
 
@@ -35,8 +37,13 @@ public class Level {
         createEnemies();
         createPotions();
         createContainers();
+        createSpikes();
         calcLevelOffsets();
         calcPlayerSpawn();
+    }
+
+    private void createSpikes() {
+        spikes = HelpMethods.getSpikesHelper(img);
     }
 
     private void createContainers() {
@@ -92,6 +99,10 @@ public class Level {
 
     public ArrayList<GameContainer> getContainers(){
         return containers;
+    }
+
+    public ArrayList<Spike> getSpikes(){
+        return spikes;
     }
 
 

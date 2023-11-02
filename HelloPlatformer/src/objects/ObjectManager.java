@@ -5,6 +5,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import entities.Player;
 import gamestates.Playing;
 import levels.Level;
 import utils.LoadSave;
@@ -14,8 +15,10 @@ public class ObjectManager {
 
     private Playing playing;
     private BufferedImage[][] potionImages, containerImages;
+    private BufferedImage spikeImage;
     private ArrayList<Potion> potions;
     private ArrayList<GameContainer> containers;
+    private ArrayList<Spike> spikes;
     
     public ObjectManager(Playing playing){
         this.playing = playing;
@@ -23,6 +26,14 @@ public class ObjectManager {
         loadImages();
 
         
+    }
+
+    public void checkSpikesTouched(Player player){
+        for(Spike s : spikes){
+            if(s.getHitbox().intersects(player.getHitbox())){
+                player.kill();
+            }
+        }
     }
 
     public void checkObjectTouched(Rectangle2D.Float hitbox){
@@ -82,6 +93,8 @@ public class ObjectManager {
                 containerImages[j][i] = containerSprite.getSubimage(40*i, 30*j, 40, 30);
             }
         }
+
+        spikeImage = LoadSave.getLevelAtlas(LoadSave.TRAP_ATLAS);
     }
 
     public void update(){
@@ -103,11 +116,24 @@ public class ObjectManager {
     public void draw (Graphics g, int xLvlOffset ){
         drawPorions(g, xLvlOffset);
         drawContainers(g, xLvlOffset);
+        drawTraps(g, xLvlOffset);
+    }
+
+    private void drawTraps(Graphics g, int xLvlOffset) {
+        for (Spike s : spikes){
+            g.drawImage(spikeImage, 
+                        (int)(s.getHitbox().x - xLvlOffset),
+                        (int)(s.getHitbox().y - s.getyDrawOffset()), 
+                        SPIKE_WIDTH, 
+                        SPIKE_HEIGHT, 
+                        null);
+        }
     }
 
     public void loadObjects(Level newLevel){
         potions = new ArrayList<>(newLevel.getPotions());
         containers = new ArrayList<>(newLevel.getContainers());
+        spikes = newLevel.getSpikes();
     }
 
     private void drawContainers(Graphics g, int xLvlOffset) {
