@@ -64,7 +64,6 @@ public class GameObject {
         } else {
             doAnimation = true;
         }
-        doAnimation = true;
     }
 
     public int getObjectType() {
