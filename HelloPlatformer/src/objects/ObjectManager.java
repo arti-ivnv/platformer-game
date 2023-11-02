@@ -47,7 +47,7 @@ public class ObjectManager {
     public void checkObjectHit(Rectangle2D.Float attackbox){
 
         for(GameContainer gc : containers){
-            if(gc.isActive()){
+            if(gc.isActive() && !gc.doAnimation){
                 if(gc.getHitbox().intersects(attackbox)){
                     gc.setAnimation(true);
 
@@ -152,7 +152,7 @@ public class ObjectManager {
 
 
     public void resetAllObjects() {
-        
+
         loadObjects(playing.getLevelManager().getCurrentLevel());
         
         for (Potion p : potions){
