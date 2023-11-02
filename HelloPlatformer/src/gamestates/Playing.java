@@ -325,4 +325,8 @@ public class Playing extends State implements Statemethods{
         objectManager.checkObjectHit(attackBox);
     }
 
+    public LevelManager getLevelManager(){
+        return levelManager;
+    }
+
 }
