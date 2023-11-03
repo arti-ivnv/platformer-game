@@ -8,17 +8,21 @@ import java.util.ArrayList;
 import entities.Player;
 import gamestates.Playing;
 import levels.Level;
+import main.Game;
 import utils.LoadSave;
 import static utils.Constants.ObjectConstants.*;
+import static utils.HelpMethods.canCannonSeePlayer;
 
 public class ObjectManager {
 
     private Playing playing;
     private BufferedImage[][] potionImages, containerImages;
+    private BufferedImage[] cannonImage;
     private BufferedImage spikeImage;
     private ArrayList<Potion> potions;
     private ArrayList<GameContainer> containers;
     private ArrayList<Spike> spikes;
+    private ArrayList<Cannon> cannons;
     
     public ObjectManager(Playing playing){
         this.playing = playing;
@@ -95,9 +99,17 @@ public class ObjectManager {
         }
 
         spikeImage = LoadSave.getLevelAtlas(LoadSave.TRAP_ATLAS);
+
+        cannonImage = new BufferedImage[7];
+        BufferedImage temp = LoadSave.getLevelAtlas(LoadSave.CANNON_ATLAS);
+
+        for (int  i = 0; i < cannonImage.length; i++){
+            cannonImage[i] = temp.getSubimage(i * 40, 0, 40, 26);
+
+        }
     }
 
-    public void update(){
+    public void update(int[][] lvlData, Player player){
 
         for (Potion p : potions){
             if(p.isActive()){
@@ -111,12 +123,80 @@ public class ObjectManager {
             }
         }
 
+        updateCannons(lvlData, player);
+
+    }
+
+    private void updateCannons(int[][] lvlData, Player player) {
+        for (Cannon c : cannons){
+
+            if(!c.doAnimation){
+                if(c.getTileY() == player.getTileY()){
+                    if(isPlayerInRange(c,player)){
+                        if(isPlayerInfrontOfCannon(c, player)){
+                            if(canCannonSeePlayer(lvlData, player.getHitbox(), c.getHitbox(), c.getTileY())){
+                                shootCannon(c);
+                            }
+                        }
+                    }
+                }
+            }
+
+            c.update();
+        }
+
+
+
+
+    }
+
+    private void shootCannon(Cannon c) {
+        c.setAnimation(true);
+    }
+
+    private boolean isPlayerInfrontOfCannon(Cannon c, Player player) {
+        if(c.getObjectType() == CANNON_LEFT){
+            if(c.getHitbox().x > player.getHitbox().x){
+                return true;
+            }
+        } else if(c.getHitbox().x < player.getHitbox().x){
+                return true;
+            }
+
+        return false;
+    }
+
+    private boolean isPlayerInRange(Cannon c, Player player) {
+        int absValue = (int)Math.abs(player.getHitbox().x - c.getHitbox().x);
+        return absValue <= Game.TILE_SIZE * 5;
     }
 
     public void draw (Graphics g, int xLvlOffset ){
         drawPorions(g, xLvlOffset);
         drawContainers(g, xLvlOffset);
         drawTraps(g, xLvlOffset);
+        drawCannons(g, xLvlOffset);
+    }
+
+    private void drawCannons(Graphics g, int xLvlOffset) {
+
+        for(Cannon c : cannons){
+
+            int x = (int)(c.getHitbox().x - xLvlOffset);
+            int width = CANNON_WIDTH;
+
+            if (c.getObjectType() == CANNON_RIGHT){
+                x += width;
+                width *= -1;
+            }
+
+            g.drawImage(cannonImage[c.animationIndex], 
+                                    x, 
+                                    (int)(c.getHitbox().y), 
+                                    width, 
+                                    CANNON_HEIGHT, 
+                                    null);
+        }
     }
 
     private void drawTraps(Graphics g, int xLvlOffset) {
@@ -134,6 +214,7 @@ public class ObjectManager {
         potions = new ArrayList<>(newLevel.getPotions());
         containers = new ArrayList<>(newLevel.getContainers());
         spikes = newLevel.getSpikes();
+        cannons = newLevel.getCannons();
     }
 
     private void drawContainers(Graphics g, int xLvlOffset) {
@@ -187,6 +268,10 @@ public class ObjectManager {
 
         for (GameContainer gc : containers){
             gc.reset();
+        }
+
+        for (Cannon c : cannons){
+            c.reset();
         }
     }
 }
