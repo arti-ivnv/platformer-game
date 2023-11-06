@@ -4,8 +4,6 @@ import java.awt.geom.Rectangle2D;
 
 import main.Game;
 
-import static utils.Constants.ObjectConstants.CANNON_HEIGHT;
-import static utils.Constants.ObjectConstants.CANNON_WIDTH;
 import static utils.Constants.Projectiles.*;
 
 public class Projectile {
