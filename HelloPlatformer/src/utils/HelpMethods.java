@@ -12,6 +12,7 @@ import main.Game;
 import objects.Cannon;
 import objects.GameContainer;
 import objects.Potion;
+import objects.Projectile;
 import objects.Spike;
 
 import static utils.Constants.EnemyConstants.CRABBY;
@@ -51,6 +52,10 @@ public class HelpMethods {
 
         return isTileSolid((int)xIndex, (int)yIndex, lvlData);
 
+    }
+
+    public static boolean isProjectileHittingLevel(Projectile p, int[][] lvlData){
+        return isSolid(p.getHitbox().x + p.getHitbox().width / 2, p.getHitbox().y + p.getHitbox().height / 2, lvlData);
     }
 
     public static boolean isTileSolid(int xTile, int yTile, int[][] lvlData){

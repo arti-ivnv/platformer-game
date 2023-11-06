@@ -101,7 +101,9 @@ public class GameObject {
     }
 
 
-    
+    public int getAnimationTick(){
+        return animationTick;
+    }
 
 
 
