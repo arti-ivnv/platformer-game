@@ -10,7 +10,7 @@ import gamestates.Playing;
 import main.Game;
 import utils.LoadSave;
 
-import static utils.Constants.PlaerConstants.*;
+import static utils.Constants.PlayerConstants.*;
 import static utils.HelpMethods.*;
 import static utils.Constants.GRAVITY;
 import static utils.Constants.ANI_SPEED;
@@ -94,7 +94,17 @@ public class Player extends Entity{
         updateHealthBar();
 
         if(currentHealth <= 0){
-            playing.setGameOver(true);
+            
+            if(state != DEAD){
+                state = DEAD;
+                animationTick = 0;
+                animationIndex = 0;
+                playing.setPlayerDying(true);
+            } else if (animationIndex == getSpriteAmount(DEAD) - 1 && animationTick >= ANI_SPEED - 1){
+                playing.setGameOver(true);
+            } else {
+                updateAnimationTick();
+            }
             return;
         }
 

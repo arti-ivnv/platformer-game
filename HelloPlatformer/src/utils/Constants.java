@@ -170,14 +170,14 @@ public class Constants {
     } 
 
     // Fix spelling 
-    public static class PlaerConstants{
+    public static class PlayerConstants{
         public static final int IDLE = 0;
         public static final int ATTACK = 1;
         public static final int RUNNING = 2;
         public static final int JUMP = 3;
         public static final int FALLING = 4;
         public static final int HURT = 5;
-        public static final int DEATH = 6;
+        public static final int DEAD = 6;
 
         
         
@@ -186,7 +186,7 @@ public class Constants {
                 case RUNNING:
                     return 6;
                 case JUMP:
-                case DEATH:
+                case DEAD:
                     return 8;
                 case HURT:
                     return 4;
