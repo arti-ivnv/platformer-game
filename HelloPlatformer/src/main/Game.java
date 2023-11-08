@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import gamestates.Gamestate;
 import gamestates.Menu;
 import gamestates.Playing;
+import ui.AudioOptions;
 import utils.LoadSave;
 
 public class Game implements Runnable{
@@ -17,6 +18,7 @@ public class Game implements Runnable{
 
     private Playing playing;
     private Menu menu;
+    private AudioOptions audioOptions;
 
 
     // one tile is 32x32
@@ -50,6 +52,7 @@ public class Game implements Runnable{
 
     // Initializer for starter classes (Player, Enemies, etc)
     private void initClasses() {
+        audioOptions = new AudioOptions();
         menu = new Menu(this);
         playing = new Playing(this);
     }
@@ -167,5 +170,9 @@ public class Game implements Runnable{
 
     public Playing getPlaying(){
         return playing;
+    }
+
+    public AudioOptions getAudioOptions(){
+        return audioOptions;
     }
 }
