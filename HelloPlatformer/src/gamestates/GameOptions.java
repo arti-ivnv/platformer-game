@@ -72,22 +72,41 @@ public class GameOptions extends State implements Statemethods{
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if(isIn(e, menuBtn))
+        if(isIn(e, menuBtn)){
+            menuBtn.setMousePressed(true);
+        } else {
+            audioOptions.mousePressed(e);
+        }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-
+        if(isIn(e, menuBtn)){
+            if(menuBtn.isMousePressed()){
+                Gamestate.state = Gamestate.MENU;
+            }
+         } else {
+                audioOptions.mouseReleased(e);
+            }
+        
+        menuBtn.resetBools();
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
-       
+        menuBtn.setMouseOver(false);
+        if(isIn(e, menuBtn)){
+            menuBtn.setMouseOver(true);
+        } else{
+            audioOptions.mouseMoved(e);
+        }
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        
+        if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
+            Gamestate.state = Gamestate.MENU;
+        }
     }
 
     @Override
