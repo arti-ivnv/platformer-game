@@ -90,5 +90,9 @@ public class Crabby extends Enemy {
         }
     }
 
+    public int getCurrentHealth(){
+        return currentHealth;
+    }
+
     
 }

@@ -95,17 +95,18 @@ public class PauseOverlay {
 
         if (isIn(e, menuB)){
             if(menuB.isMousePressed()){
-               playing.setGamestate(Gamestate.MENU);
-               playing.unpauseGame();
+                playing.resetAll();
+                playing.setGamestate(Gamestate.MENU);
+                playing.unpauseGame();
             }
         } else if (isIn(e, replayB)){
             if(replayB.isMousePressed()){
-               playing.resetAll();
-               playing.unpauseGame();
+                playing.resetAll();
+                playing.unpauseGame();
             }
         } else if (isIn(e, unpauseB)){
             if(unpauseB.isMousePressed()){
-               playing.unpauseGame();
+                playing.unpauseGame();
             }
         } else {
             audioOptions.mouseReleased(e);
