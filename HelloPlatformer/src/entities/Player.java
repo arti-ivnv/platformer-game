@@ -100,7 +100,6 @@ public class Player extends Entity{
     }
 
     private void initAttackBox() {
-        resetAttackBox();
         attackBox = new Rectangle2D.Float(x , y, (int)(20 * Game.SCALE), (int)(20 * Game.SCALE));
     }
 
@@ -508,7 +507,12 @@ public class Player extends Entity{
 
         hitbox.x = x;
         hitbox.y = y;
-        resetAttackBox();
+
+        if(flipW == 1){
+                attackBox.x = hitbox.x + hitbox.width + (int)(Game.SCALE * 10) - 30;
+            } else {
+                attackBox.x = hitbox.x - hitbox.width - (int)(Game.SCALE * 10) + 15;
+            }
 
         if(!isEntityOnFloor(hitbox, lvlData)){
             inAir = true;
@@ -517,11 +521,7 @@ public class Player extends Entity{
     }
 
     private void resetAttackBox(){
-        if(flipW == 1){
-            attackBox.x = hitbox.x + hitbox.width + (int)(Game.SCALE * 10) - 30;
-        } else {
-            attackBox.x = hitbox.x - hitbox.width - (int)(Game.SCALE * 10) + 15;
-        }
+        
     }
 
     public void changePower(int value) {
