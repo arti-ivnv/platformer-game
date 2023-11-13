@@ -62,7 +62,7 @@ public class AudioPlayer {
 
         for(int i = 0; i < effects.length; i++){
             effects[i] = getClip(effectNames[i]);
-            // System.out.println("["+ i +"] effect: " + effects[i]);
+            System.out.println("["+ i +"] effect: " + effects[i]);
         }
 
 
@@ -80,7 +80,7 @@ public class AudioPlayer {
 
 
             audio.close();
-        return c;
+            return c;
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
         }
@@ -110,7 +110,7 @@ public class AudioPlayer {
 
     public void lvlCompleted(){
         stopSong();
-        playSong(LVL_COMPLETED);
+        playEffect(LVL_COMPLETED);
     }
 
     public void toggleSongMute(){

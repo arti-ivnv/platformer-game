@@ -52,9 +52,16 @@ public class Player extends Entity{
     private int healthBarHeight = (int) (4 * Game.SCALE);
     private int healthBarX = (int) (34 * Game.SCALE);
     private int healthBarY = (int) (14 * Game.SCALE);
-
-
     private int healthWidth = healthBarWidth;
+
+    // Sub bar (power/stamina  indicator)
+    private int powerBarWidth = (int) (104 * Game.SCALE);
+    private int powerBarHeight = (int) (2 * Game.SCALE);
+    private int powerBarX = (int) (44 * Game.SCALE);
+    private int powerBarY = (int) (34 * Game.SCALE);
+    private int powerWidth = powerBarWidth;
+    private int powerMaxValue = 200;
+    private int powerValue = powerMaxValue;
 
 
     private int flipX = 0;
@@ -65,6 +72,13 @@ public class Player extends Entity{
     private Playing playing;
 
     private int tileY = 0;
+
+    private boolean powerAttackActive;
+    private int powerAttackTick;
+    // Stamina
+    private int powerGrowSpeed = 15;
+    private int powerGrowTick;
+
 
     public Player(float x, float y, int width, int height, Playing playing) {
         super(x, y, width, height);
@@ -93,6 +107,7 @@ public class Player extends Entity{
     public void update(){
 
         updateHealthBar();
+        updatePowerBar();
 
         if(currentHealth <= 0){
             
@@ -159,6 +174,16 @@ public class Player extends Entity{
         healthWidth = (int) ((currentHealth / (float) maxHealth) * healthBarWidth);
     }
 
+    private void updatePowerBar(){
+        powerWidth = (int)((powerValue / (float) powerMaxValue) * powerBarWidth);
+
+        powerGrowTick++;
+        if(powerGrowTick >= powerGrowSpeed){
+            powerGrowTick = 0;
+            changePower(1);
+        }
+    }
+
     // Drawing
     public void render(Graphics g, int lvlOffset){
         g.drawImage(animations[state][animationIndex], 
@@ -172,9 +197,16 @@ public class Player extends Entity{
 
 
     private void drawUI(Graphics g) {
+        // Background UI
         g.drawImage(statusBarImage, statusBarX, statusBarY, statusBarWidth, statusBarHeight, null);
+
+        // Health UI
         g.setColor(Color.RED);
         g.fillRect(healthBarX + statusBarX, healthBarY + statusBarY, healthWidth, healthBarHeight);
+
+        // Power UI
+        g.setColor(Color.yellow);
+        g.fillRect(powerBarX + statusBarX, powerBarY + statusBarY, powerWidth, powerBarHeight);
 
     }
 
@@ -433,7 +465,12 @@ public class Player extends Entity{
     }
 
     public void changePower(int value) {
-        System.out.println("Added Power!");
+        powerValue += value;
+        if (powerValue >= powerMaxValue){
+            powerValue = powerMaxValue;
+        } else if (powerValue <= 0){
+            powerValue = 0;
+        }
     }
 
     public void kill() {
