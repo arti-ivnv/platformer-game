@@ -178,12 +178,14 @@ public class Constants {
         public static final int FALLING = 4;
         public static final int HURT = 5;
         public static final int DEAD = 6;
+        public static final int POWER_ATTACK = 7;
 
         
         
         public static int getSpriteAmount(int player_action){
             switch (player_action) {
                 case RUNNING:
+                case POWER_ATTACK:
                     return 6;
                 case JUMP:
                 case DEAD:

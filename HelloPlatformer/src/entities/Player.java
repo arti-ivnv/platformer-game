@@ -134,8 +134,15 @@ public class Player extends Entity{
             checkPotionTouched();
             checkSpikesTouched();
             tileY = (int)(hitbox.y / Game.TILE_SIZE);
+            if (powerAttackActive){
+                powerAttackTick++;
+                if(powerAttackTick >= 35){
+                    powerAttackTick = 0;
+                    powerAttackActive = false;
+                }
+            }
         }
-        if(attacking){
+        if(attacking || powerAttackActive){
             checkAttack();
         }
         updateAnimationTick();
@@ -156,15 +163,20 @@ public class Player extends Entity{
             return;
         }
         attackChecked = true;
+
+        if(powerAttackActive){
+            attackChecked = false;
+        }
+        
         playing.checkEnemyHit(attackBox);
         playing.checkObejectHit(attackBox);
         playing.getGame().getAudioPlayer().playAttackSound();
     }
 
     private void updateAttackBox() {
-        if(right){
+        if(right || (powerAttackActive && flipW == 1)){
             attackBox.x = hitbox.x + hitbox.width + (int)(Game.SCALE * 10) - 30;
-        }else if(left){
+        }else if(left || (powerAttackActive && flipW == -1)){
             attackBox.x = hitbox.x - hitbox.width - (int)(Game.SCALE * 10) + 15;
         }
         attackBox.y = hitbox.y + (int)(Game.SCALE * 10) - 10;
@@ -222,9 +234,12 @@ public class Player extends Entity{
         // }
         
         if(!inAir){
-            if((!left && !right) || (right && left)){
-                return;
+            if (!powerAttackActive){
+                if ((!left && !right) || (right && left)){
+                    return;
+                }
             }
+
         }
 
         float xSpeed = 0;
@@ -240,13 +255,25 @@ public class Player extends Entity{
             flipW = 1;
         }
 
+        if(powerAttackActive){
+            if(!left && !right){
+                if(flipW == -1){
+                    xSpeed = -walkSpeed;
+                } else {
+                    xSpeed = walkSpeed;
+                }
+            }
+
+            xSpeed *= 3;
+        }
+
         if(!inAir){
             if(!isEntityOnFloor(hitbox, lvlData)){
                 inAir = true;
             }
         }
 
-        if(inAir){
+        if(inAir && !powerAttackActive){
             if(canMoveHere(hitbox.x, hitbox.y + airSpeed, hitbox.width, hitbox.height, lvlData)){
                 hitbox.y += airSpeed;
                 airSpeed += GRAVITY;
@@ -286,6 +313,10 @@ public class Player extends Entity{
             hitbox.x += xSpeed;
         } else {
             hitbox.x = getEntityXPosNextToWall(hitbox, xSpeed);
+            if(powerAttackActive){
+                powerAttackActive = false;
+                powerAttackTick = 0;
+            }
         }
 
     }
@@ -339,6 +370,13 @@ public class Player extends Entity{
             // }
         }
 
+        if(powerAttackActive){
+            state = ATTACK;
+            animationIndex = 1;
+            animationTick = 0;
+            return;
+        }
+
         if (attacking){
             state = ATTACK;
             if(startAnimation != ATTACK){
@@ -361,7 +399,7 @@ public class Player extends Entity{
     // Parse BufferImage and devide it into subimages.
     // Store the subimages in BufferedImage 2-D array.
     private void loadAnimations() {
-        animations = new BufferedImage[7][8];
+        animations = new BufferedImage[8][8];
 
         // Helper class to upload animation images
         BufferedImage [] loader = LoadSave.getPlayerAtlas();
@@ -400,6 +438,11 @@ public class Player extends Entity{
         // HURT
         for(int i = 0; i < 8; i++){
             animations[6][i] = loader[6].getSubimage(i * 32, 0, 32, 32);
+        }
+
+        // Power attack
+        for (int i = 0; i < 6; i++){
+            animations[7][i] = loader[7].getSubimage(i * 32, 0, 32, 32);
         }
 
         statusBarImage = LoadSave.getLevelAtlas(LoadSave.STATUS_BAR);
@@ -479,6 +522,16 @@ public class Player extends Entity{
 
     public int  getTileY(){
         return tileY;
+    }
+
+    public void powerAttack() {
+        if (powerAttackActive){
+            return;
+        }
+        if (powerValue >= 60){
+            powerAttackActive = true;
+            changePower(-60);
+        }
     }
     
 }
